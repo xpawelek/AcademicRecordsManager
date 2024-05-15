@@ -15,8 +15,7 @@
     <Keyword>QtVS_v304</Keyword>
     <WindowsTargetPlatformVersion Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">10.0</WindowsTargetPlatformVersion>
     <WindowsTargetPlatformVersion Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">10.0</WindowsTargetPlatformVersion>
-    <QtMsBuild Condition="'$(QtMsBuild)'=='' OR !Exists('$(QtMsBuild)\qt.targets')"
-      >$(MSBuildProjectDirectory)\QtMsBuild</QtMsBuild>
+    <QtMsBuild Condition="'$(QtMsBuild)'=='' OR !Exists('$(QtMsBuild)\qt.targets')">$(MSBuildProjectDirectory)\QtMsBuild</QtMsBuild>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'" Label="Configuration">
@@ -46,11 +45,8 @@
     <QtModules>core;gui;widgets</QtModules>
     <QtBuildConfig>release</QtBuildConfig>
   </PropertyGroup>
-  <Target Name="QtMsBuildNotFound"
-    BeforeTargets="CustomBuild;ClCompile"
-    Condition="!Exists('$(QtMsBuild)\qt.targets') or !Exists('$(QtMsBuild)\qt.props')">
-    <Message Importance="High"
-      Text="QtMsBuild: could not locate qt.targets, qt.props; project may not build correctly." />
+  <Target Name="QtMsBuildNotFound" BeforeTargets="CustomBuild;ClCompile" Condition="!Exists('$(QtMsBuild)\qt.targets') or !Exists('$(QtMsBuild)\qt.props')">
+    <Message Importance="High" Text="QtMsBuild: could not locate qt.targets, qt.props; project may not build correctly." />
   </Target>
   <ImportGroup Label="ExtensionSettings" />
   <ImportGroup Label="Shared" />
@@ -96,12 +92,21 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <QtRcc Include="Katalog_JIPP_Project.qrc"/>
-    <QtUic Include="Katalog_JIPP_Project.ui"/>
-    <QtMoc Include="Katalog_JIPP_Project.h"/>
-    <ClCompile Include="Katalog_JIPP_Project.cpp"/>
-    <ClCompile Include="main.cpp"/>
-
+    <ClCompile Include="NewStudent_Form.cpp" />
+    <QtRcc Include="Katalog_JIPP_Project.qrc" />
+    <QtUic Include="EditStudent_Form.ui" />
+    <QtUic Include="Katalog_JIPP_Project.ui" />
+    <QtMoc Include="Katalog_JIPP_Project.h" />
+    <ClCompile Include="EditStudent_Form.cpp" />
+    <ClCompile Include="Katalog_JIPP_Project.cpp" />
+    <ClCompile Include="main.cpp" />
+    <QtUic Include="NewStudent_Form.ui" />
+  </ItemGroup>
+  <ItemGroup>
+    <QtMoc Include="EditStudent_Form.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <QtMoc Include="NewStudent_Form.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Condition="Exists('$(QtMsBuild)\qt.targets')">

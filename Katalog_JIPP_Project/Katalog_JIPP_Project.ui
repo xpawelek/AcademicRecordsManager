@@ -1,28 +1,169 @@
-<UI version="4.0" >
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
  <class>Katalog_JIPP_ProjectClass</class>
- <widget class="QMainWindow" name="Katalog_JIPP_ProjectClass" >
-  <property name="objectName" >
-   <string notr="true">Katalog_JIPP_ProjectClass</string>
+ <widget class="QMainWindow" name="Katalog_JIPP_ProjectClass">
+  <property name="sizePolicy">
+   <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+    <horstretch>0</horstretch>
+    <verstretch>0</verstretch>
+   </sizepolicy>
   </property>
-  <property name="geometry" >
-   <rect>
-    <x>0</x>
-    <y>0</y>
-    <width>600</width>
-    <height>400</height>
-   </rect>
-  </property>
-  <property name="windowTitle" >
+  <property name="windowTitle">
    <string>Katalog_JIPP_Project</string>
-  </property>  <widget class="QMenuBar" name="menuBar" />
-  <widget class="QToolBar" name="mainToolBar" />
-  <widget class="QWidget" name="centralWidget" />
-  <widget class="QStatusBar" name="statusBar" />
+  </property>
+  <widget class="QWidget" name="centralWidget">
+   <layout class="QGridLayout" name="gridLayout_2">
+    <item row="0" column="0">
+     <layout class="QGridLayout" name="gridLayout">
+      <item row="1" column="0" colspan="8">
+       <widget class="QListWidget" name="listWidget">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="6">
+       <widget class="QPushButton" name="removeStudent_button">
+        <property name="enabled">
+         <bool>true</bool>
+        </property>
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="font">
+         <font>
+          <family>Verdana</family>
+         </font>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">padding: 5; color: red</string>
+        </property>
+        <property name="text">
+         <string>Remove student</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="6">
+       <widget class="QComboBox" name="comboBox_filtrowanie">
+        <property name="styleSheet">
+         <string notr="true">font-family: verdana; padding: 5</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="0">
+       <widget class="QLabel" name="label">
+        <property name="font">
+         <font>
+          <pointsize>7</pointsize>
+          <bold>true</bold>
+         </font>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">color:red; text-weight:bold</string>
+        </property>
+        <property name="text">
+         <string>&lt;span style = 'font-family: verdana; text-weight: 500; font-size: 8'&gt;Kliknij dwukrotnie po więcej informacji&lt;/span&gt;</string>
+        </property>
+        <property name="margin">
+         <number>5</number>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="0">
+       <widget class="QPushButton" name="addStudent_button">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="font">
+         <font>
+          <family>Verdana</family>
+         </font>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">padding: 5</string>
+        </property>
+        <property name="text">
+         <string>Add student</string>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="1" colspan="5">
+       <widget class="QPushButton" name="editStudent_button">
+        <property name="enabled">
+         <bool>true</bool>
+        </property>
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="font">
+         <font>
+          <family>Verdana</family>
+         </font>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">padding:5</string>
+        </property>
+        <property name="text">
+         <string>Edit student</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="0">
+       <widget class="QLabel" name="filtrowanieDanych_label">
+        <property name="styleSheet">
+         <string notr="true">padding: 2; font-family: verdana</string>
+        </property>
+        <property name="text">
+         <string>Filtruj dane</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="1" colspan="5">
+       <widget class="QLineEdit" name="filtrowanie_lineEdit">
+        <property name="styleSheet">
+         <string notr="true">font-family: verdana; padding: 5</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QMenuBar" name="menuBar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>492</width>
+     <height>21</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QToolBar" name="mainToolBar">
+   <attribute name="toolBarArea">
+    <enum>TopToolBarArea</enum>
+   </attribute>
+   <attribute name="toolBarBreak">
+    <bool>false</bool>
+   </attribute>
+  </widget>
+  <widget class="QStatusBar" name="statusBar"/>
  </widget>
- <layoutDefault spacing="6" margin="11" />
- <pixmapfunction></pixmapfunction>
+ <layoutdefault spacing="6" margin="11"/>
  <resources>
-   <include location="Katalog_JIPP_Project.qrc"/>
+  <include location="Katalog_JIPP_Project.qrc"/>
  </resources>
  <connections/>
-</UI>
+</ui>
