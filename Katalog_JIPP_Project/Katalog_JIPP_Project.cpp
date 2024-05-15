@@ -4,6 +4,7 @@ Katalog_JIPP_Project::Katalog_JIPP_Project(QWidget *parent)
     : QMainWindow(parent)
 {
     ui.setupUi(this);
+    //
 }
 
 Katalog_JIPP_Project::~Katalog_JIPP_Project()
