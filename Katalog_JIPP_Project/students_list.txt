@@ -1,6 +1,6 @@
 1;Anna;Nowakk;True;Licencjackie;Stacjonarnie;Fizyka
 2;Asia;Kulig;True;Licencjackie;Stacjonarnie;Mechanika
-3;Olja;Dygus;True;Licencjackie;Niestacjonarnie;Japonistyka
+3;Ola;Dygus;True;Licencjackie;Niestacjonarnie;Japonistyka
 4;Ania;Nowak;False;Licencjackie;Niestacjonarnie;Sztuka
 5;Emila;Krol;False;Licencjackie;Stacjonarnie;Zarzadzanie
-6;Ewelina;Nowak;False;Licencjackie;Stacjonarnie;Fizyka
+6;Ewelina;Nowak;False;Licencjackie;Niestacjonarnie;Fizyka

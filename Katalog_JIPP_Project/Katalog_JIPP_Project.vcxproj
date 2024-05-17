@@ -93,6 +93,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="NewStudent_Form.cpp" />
+    <ClCompile Include="ownNamespace.cpp" />
     <QtRcc Include="Katalog_JIPP_Project.qrc" />
     <QtUic Include="EditStudent_Form.ui" />
     <QtUic Include="Katalog_JIPP_Project.ui" />
@@ -107,6 +108,9 @@
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="NewStudent_Form.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="ownNamespace.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Condition="Exists('$(QtMsBuild)\qt.targets')">
