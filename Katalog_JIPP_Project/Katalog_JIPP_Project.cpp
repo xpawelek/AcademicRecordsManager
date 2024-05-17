@@ -325,13 +325,39 @@ public:
     }
 };
 
+DataProcessing dataProcess;
+
+std::vector<Student>students = dataProcess.returnStudentsList();
 
 Katalog_JIPP_Project::Katalog_JIPP_Project(QWidget *parent)
     : QMainWindow(parent)
 {
     ui.setupUi(this);
-    //
+    
+
+    for (std::vector<Student>::iterator it = students.begin(); it != students.end(); ++it) {
+        ui.listWidget->addItem(QString::fromStdString(it->getInfo()));
+    }
 }
 
 Katalog_JIPP_Project::~Katalog_JIPP_Project()
 {}
+
+void Katalog_JIPP_Project::addStudentButton_Clicked() {
+    NewStudent_Form* addingForm = new NewStudent_Form(this);
+    connect(addingForm, &NewStudent_Form::sendData, this, &Katalog_JIPP_Project::addingNewStudent);
+    addingForm->setWindowModality(Qt::ApplicationModal);
+    addingForm->show();
+}
+
+void Katalog_JIPP_Project::addingNewStudent(const string& newFirstName, const string& newSecondName, const bool& newIsStillStudying, const string& newCurrentStudyLevel, const string& newStudyMode, const string& newFieldOfStudy) {
+    dataProcess.addTheStudent(newFirstName, newSecondName, newIsStillStudying, newCurrentStudyLevel, newStudyMode, newFieldOfStudy);
+
+    ui.listWidget->clear();
+    students = dataProcess.returnStudentsList();
+
+    for (std::vector<Student>::iterator it = students.begin(); it != students.end(); ++it) {
+        ui.listWidget->addItem(QString::fromStdString(it->getInfo()));
+    }
+    ui.filtrowanie_lineEdit->setText("");
+}

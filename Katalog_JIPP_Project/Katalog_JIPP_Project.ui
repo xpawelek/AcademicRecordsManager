@@ -2,6 +2,14 @@
 <ui version="4.0">
  <class>Katalog_JIPP_ProjectClass</class>
  <widget class="QMainWindow" name="Katalog_JIPP_ProjectClass">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>492</width>
+    <height>367</height>
+   </rect>
+  </property>
   <property name="sizePolicy">
    <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
     <horstretch>0</horstretch>
@@ -165,5 +173,25 @@
  <resources>
   <include location="Katalog_JIPP_Project.qrc"/>
  </resources>
- <connections/>
+ <connections>
+  <connection>
+   <sender>addStudent_button</sender>
+   <signal>clicked()</signal>
+   <receiver>Katalog_JIPP_ProjectClass</receiver>
+   <slot>addStudentButton_Clicked()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>172</x>
+     <y>323</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>165</x>
+     <y>344</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+ <slots>
+  <slot>addStudentButton_Clicked()</slot>
+ </slots>
 </ui>

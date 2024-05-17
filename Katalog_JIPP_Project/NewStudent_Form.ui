@@ -291,5 +291,25 @@
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <resources/>
- <connections/>
+ <connections>
+  <connection>
+   <sender>pushButton</sender>
+   <signal>clicked()</signal>
+   <receiver>NewStudent_FormClass</receiver>
+   <slot>sendStudentDataBack()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>143</x>
+     <y>298</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>77</x>
+     <y>301</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+ <slots>
+  <slot>sendStudentDataBack()</slot>
+ </slots>
 </ui>
