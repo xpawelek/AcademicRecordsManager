@@ -361,3 +361,50 @@ void Katalog_JIPP_Project::addingNewStudent(const string& newFirstName, const st
     }
     ui.filtrowanie_lineEdit->setText("");
 }
+
+void Katalog_JIPP_Project::removeStudentButton_Clicked() {
+    if (selectedItem != -1) {
+        auto reply = QMessageBox::question(this, "Zatwierdzenie", "Czy na pewno chcesz usunac studenta z listy?", QMessageBox::Yes | QMessageBox::No);
+        if (reply == QMessageBox::Yes)
+        {
+            QListWidgetItem* item = ui.listWidget->currentItem();
+            QString text = item->text();
+            QStringList pieces = text.split("|");
+
+            dataProcess.removeTheStudent(pieces[0].toInt());
+            ui.listWidget->clear();
+            students = dataProcess.returnStudentsList();
+
+            for (std::vector<Student>::iterator it = students.begin(); it != students.end(); ++it) {
+                ui.listWidget->addItem(QString::fromStdString(it->getInfo()));
+            }
+            QMessageBox::information(this, "", "Usunieto pomyslnie.");
+        }
+        ui.listWidget->setCurrentRow(-1);
+        selectedItem = ui.listWidget->currentRow();
+        ui.filtrowanie_lineEdit->setText("");
+    }
+    else
+    {
+        QMessageBox::information(this, "Nie wybrano studenta", "Wybierz studenta!");
+    }
+}
+
+void Katalog_JIPP_Project::chosenStudentDoubleClicked() {
+    QListWidgetItem* item = ui.listWidget->currentItem();
+    QString text = item->text();
+    QStringList pieces = text.split("|");
+
+
+    for (std::vector<Student>::iterator it = students.begin(); it != students.end(); ++it) {
+        if (it->getIndex() == pieces[0].toInt())
+        {
+            QString additionalInfo = QString::fromStdString(it->getAdditionalInfo());
+            QMessageBox::information(this, "Dodatkowe informacje", additionalInfo);
+        }
+    }
+}
+
+void Katalog_JIPP_Project::rowChanged() {
+    selectedItem = ui.listWidget->currentRow();
+}
