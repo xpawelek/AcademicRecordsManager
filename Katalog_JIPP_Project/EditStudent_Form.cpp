@@ -2,39 +2,40 @@
 #include <QMessageBox>
 #include "ownNamespace.h"
 #include <regex> 
-using namespace std;
+
 
 EditStudent_Form::EditStudent_Form(int index, string passedFirstName, string passedSecondName, bool passedIsStillStudying, string passedStudyLevel, string passedStudyMode, string passedFieldOfStudy, QWidget* parent)
-    : QMainWindow(parent)
+	: QMainWindow(parent)
 {
 
-    ui.setupUi(this);
+	ui.setupUi(this);
 
-    ui.comboBox_stopnie->addItem("Licencjackie");
-    ui.comboBox_stopnie->addItem("Inzynierskie");
-    ui.comboBox_stopnie->addItem("Magisterskie");
-    ui.comboBox_stopnie->addItem("Doktoranckie");
+	ui.comboBox_stopnie->addItem("Licencjackie");
+	ui.comboBox_stopnie->addItem("Inzynierskie");
+	ui.comboBox_stopnie->addItem("Magisterskie");
+	ui.comboBox_stopnie->addItem("Doktoranckie");
 
-    ui.lineEdit_firstName->setText(QString::fromStdString(passedFirstName));
-    ui.lineEdit_secondName->setText(QString::fromStdString(passedSecondName));
-    if (passedIsStillStudying)
-    {
-        ui.checkBox_IfStillStudy->setChecked(true);
-    }
-    ui.comboBox_stopnie->setCurrentText(QString::fromStdString(passedStudyLevel));
-    if (passedStudyMode == "Stacjonarne") {
-        ui.rd_stacjonarnie->setChecked(true);
-    }
-    else {
-        ui.rd_niestacjonarnie->setChecked(true);
-    }
-    ui.lineEdit_Field->setText(QString::fromStdString(passedFieldOfStudy));
+	ui.lineEdit_firstName->setText(QString::fromStdString(passedFirstName));
+	ui.lineEdit_secondName->setText(QString::fromStdString(passedSecondName));
+	if (passedIsStillStudying)
+	{
+		ui.checkBox_IfStillStudy->setChecked(true);
+	}
+	ui.comboBox_stopnie->setCurrentText(QString::fromStdString(passedStudyLevel));
+	if (passedStudyMode == "Stacjonarne") {
+		ui.rd_stacjonarnie->setChecked(true);
+	}
+	else {
+		ui.rd_niestacjonarnie->setChecked(true);
+	}
+	ui.lineEdit_Field->setText(QString::fromStdString(passedFieldOfStudy));
 
-    passedIndex = index;
+	passedIndex = index;
 }
 
 EditStudent_Form::~EditStudent_Form()
 {}
+
 
 void EditStudent_Form::editButton_Clicked() {
 	string firstName = ownNamespace::capitalizeFirstLetter(ui.lineEdit_firstName->text().toStdString());
@@ -72,7 +73,7 @@ void EditStudent_Form::editButton_Clicked() {
 	{
 		string studyMode = ui.rd_stacjonarnie->isChecked() ? "Stacjonarnie" : "Niestacjonarnie";
 		bool isStillStudying = ui.checkBox_IfStillStudy->isChecked() ? true : false;
-		emit sendEditedDataBack(passedIndex, ui.lineEdit_firstName->text().toStdString(), ui.lineEdit_secondName->text().toStdString(), isStillStudying, ui.comboBox_stopnie->currentText().toStdString(), studyMode, ui.lineEdit_Field->text().toStdString());
+		emit sendEditedDataBack(passedIndex, firstName, secondName, isStillStudying, ui.comboBox_stopnie->currentText().toStdString(), studyMode, fieldOfStudy);
 		QMessageBox::information(this, "Sukces", "Dane studenta zostaly zedytowane.");
 		this->close();
 	}

@@ -21,6 +21,8 @@ private slots:
     void removeStudentButton_Clicked();
     void chosenStudentDoubleClicked();
     void rowChanged();
+    void filtering_textChanged();
+    void showContextMenu(const QPoint& pos);
 
 private:
     Ui::Katalog_JIPP_ProjectClass ui;
