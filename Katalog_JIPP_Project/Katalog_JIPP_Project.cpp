@@ -408,3 +408,26 @@ void Katalog_JIPP_Project::chosenStudentDoubleClicked() {
 void Katalog_JIPP_Project::rowChanged() {
     selectedItem = ui.listWidget->currentRow();
 }
+
+void Katalog_JIPP_Project::filtering_textChanged() {
+    if (ui.comboBox_filtrowanie->currentIndex() != -1)
+    {
+        if (ui.filtrowanie_lineEdit->text() == "") {
+            ui.listWidget->clear();
+            students = dataProcess.returnStudentsList();
+
+            for (std::vector<Student>::iterator it = students.begin(); it != students.end(); ++it) {
+                ui.listWidget->addItem(QString::fromStdString(it->getInfo()));
+            }
+        }
+        else
+        {
+            ui.listWidget->clear();
+            students = dataProcess.returnFilteredData(ui.filtrowanie_lineEdit->text().toStdString(), ui.comboBox_filtrowanie->currentIndex());
+
+            for (std::vector<Student>::iterator it = students.begin(); it != students.end(); ++it) {
+                ui.listWidget->addItem(QString::fromStdString(it->getInfo()));
+            }
+        }
+    }
+}
