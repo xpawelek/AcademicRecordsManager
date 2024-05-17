@@ -16,7 +16,13 @@ public:
 private slots:
     void addingNewStudent(const string& new_firstName, const string& new_secondName, const bool& new_isStillStudying, const string& new_currentStudyLevel, const string& new_studyMode, const string& new_fieldOfStudy);
     void addStudentButton_Clicked();
+    void editStudentButton_Clicked();
+    void editingStudent(const int& index, const string& new_firstName, const string& new_secondName, const bool& new_isStillStudying, const string& new_currentStudyLevel, const string& new_studyMode, const string& new_fieldOfStudy);
+    void removeStudentButton_Clicked();
+    void chosenStudentDoubleClicked();
+    void rowChanged();
 
 private:
     Ui::Katalog_JIPP_ProjectClass ui;
+    int selectedItem = -1;
 };
