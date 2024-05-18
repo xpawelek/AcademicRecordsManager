@@ -2,13 +2,14 @@
 
 #include <QMainWindow>
 #include "ui_EditStudent_Form.h"
+using namespace std;
 
 class EditStudent_Form : public QMainWindow
 {
 	Q_OBJECT
-
+		int passedIndex;
 public:
-	EditStudent_Form(QWidget *parent = nullptr);
+	EditStudent_Form(int index, string passedFirstName, string passedSecondName, bool passedIsStillStudying, string passedStudyLevel, string passedStudyMode, string passedFieldOfStudy, QWidget* parent = nullptr);
 	~EditStudent_Form();
 
 signals:

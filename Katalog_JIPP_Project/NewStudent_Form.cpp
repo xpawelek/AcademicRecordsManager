@@ -2,9 +2,8 @@
 #include <QMessageBox>
 #include <regex> 
 #include "ownNamespace.h"
-using namespace std;
 
-NewStudent_Form::NewStudent_Form(QWidget *parent)
+NewStudent_Form::NewStudent_Form(QWidget* parent)
 	: QMainWindow(parent)
 {
 	ui.setupUi(this);
@@ -18,6 +17,7 @@ NewStudent_Form::NewStudent_Form(QWidget *parent)
 
 NewStudent_Form::~NewStudent_Form()
 {}
+
 
 
 void NewStudent_Form::sendStudentDataBack() {

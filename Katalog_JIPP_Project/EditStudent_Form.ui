@@ -306,5 +306,25 @@
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <resources/>
- <connections/>
+ <connections>
+  <connection>
+   <sender>editButton</sender>
+   <signal>clicked()</signal>
+   <receiver>EditStudent_FormClass</receiver>
+   <slot>editButton_Clicked()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>172</x>
+     <y>297</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>106</x>
+     <y>301</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+ <slots>
+  <slot>editButton_Clicked()</slot>
+ </slots>
 </ui>
