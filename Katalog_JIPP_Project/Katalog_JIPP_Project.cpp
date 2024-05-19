@@ -334,6 +334,13 @@ Katalog_JIPP_Project::Katalog_JIPP_Project(QWidget *parent)
 {
     ui.setupUi(this);
     
+    ui.comboBox_filtrowanie->addItem("Index");
+    ui.comboBox_filtrowanie->addItem("Imie");
+    ui.comboBox_filtrowanie->addItem("Nazwisko");
+    ui.comboBox_filtrowanie->setCurrentIndex(-1);
+
+    ui.listWidget->setContextMenuPolicy(Qt::CustomContextMenu);
+    connect(ui.listWidget, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(showContextMenu(QPoint)));
 
     for (std::vector<Student>::iterator it = students.begin(); it != students.end(); ++it) {
         ui.listWidget->addItem(QString::fromStdString(it->getInfo()));
@@ -359,6 +366,45 @@ void Katalog_JIPP_Project::addingNewStudent(const string& newFirstName, const st
     for (std::vector<Student>::iterator it = students.begin(); it != students.end(); ++it) {
         ui.listWidget->addItem(QString::fromStdString(it->getInfo()));
     }
+    ui.filtrowanie_lineEdit->setText("");
+}
+
+void Katalog_JIPP_Project::editStudentButton_Clicked() {
+    if (selectedItem != -1) {
+        QListWidgetItem* item = ui.listWidget->currentItem();
+        QString text = item->text();
+        QStringList pieces = text.split("|");
+
+        for (std::vector<Student>::iterator it = students.begin(); it != students.end(); ++it) {
+            if (it->getIndex() == pieces[0].toInt())
+            {
+                QListWidgetItem* item = ui.listWidget->currentItem();
+                QString text = item->text();
+                QStringList pieces = text.split("|");
+                int index = pieces[0].toInt();
+
+                EditStudent_Form* editForm = new EditStudent_Form(index, it->getFirstName(), it->getSecondName(), it->getIsStillStudying(), it->getCurrentStudyLevel(), it->get_studyMode(), it->getFieldOfStudy(), this);
+                connect(editForm, &EditStudent_Form::sendEditedDataBack, this, &Katalog_JIPP_Project::editingStudent);
+                editForm->setWindowModality(Qt::ApplicationModal);
+                editForm->show();
+            }
+        }
+    }
+    else {
+        QMessageBox::information(this, "Nie wybrano studenta", "Wybierz studenta!");
+    }
+}
+
+void Katalog_JIPP_Project::editingStudent(const int& indexReceived, const string& firstNameReceived, const string& secondNameReceived, const bool& isStillStudyingReceived, const string& currentStudyLevelReceived, const string& studyModeReceived, const string& fieldOfStudyReceived) {
+
+    dataProcess.editTheStudent(indexReceived, firstNameReceived, secondNameReceived, isStillStudyingReceived, currentStudyLevelReceived, studyModeReceived, fieldOfStudyReceived);
+    ui.listWidget->clear();
+    students = dataProcess.returnStudentsList();
+
+    for (std::vector<Student>::iterator it = students.begin(); it != students.end(); ++it) {
+        ui.listWidget->addItem(QString::fromStdString(it->getInfo()));
+    }
+
     ui.filtrowanie_lineEdit->setText("");
 }
 
@@ -430,4 +476,14 @@ void Katalog_JIPP_Project::filtering_textChanged() {
             }
         }
     }
+}
+
+void Katalog_JIPP_Project::showContextMenu(const QPoint& pos)
+{
+    QPoint globalPos = ui.listWidget->mapToGlobal(pos);
+    QMenu myMenu;
+    myMenu.addAction("View more details", this, SLOT(chosenStudentDoubleClicked()));
+    myMenu.addAction("Edit", this, SLOT(editStudentButton_Clicked()));
+    myMenu.addAction("Remove", this, SLOT(removeStudentButton_Clicked()));
+    myMenu.exec(globalPos);
 }
