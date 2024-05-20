@@ -23,6 +23,8 @@ private slots:
     void rowChanged();
     void filtering_textChanged();
     void showContextMenu(const QPoint& pos);
+    void readFromFile_Clicked();
+    void writeToFile_Clicked();
 
 private:
     Ui::Katalog_JIPP_ProjectClass ui;

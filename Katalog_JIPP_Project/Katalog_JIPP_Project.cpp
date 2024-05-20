@@ -126,14 +126,24 @@ public:
 class DataFileReader : public IDataReader {
 private:
     vector<Student> students;
-
+    string fileName;
 public:
+    DataFileReader() {}
+
+    DataFileReader(string fileName) {
+        this->fileName = fileName;
+    }
+
+    string getFileName() const
+    {
+        return this->fileName;
+    }
 
     vector<Student> readStudentsData() override {
         students.clear();
         students.shrink_to_fit();
 
-        ifstream file("students_list.txt");
+        ifstream file(getFileName());
         string line;
 
         if (file.is_open()) {
@@ -172,7 +182,7 @@ public:
 
     bool checkIfFileEmpty()
     {
-        ifstream file("students_list.txt");
+        ifstream file(getFileName());
         file.seekg(0, ios::end);
         if (file.tellg() == 0) {
             return true;
@@ -191,16 +201,42 @@ public:
 };
 
 class DataWriter : IDataWriter {
+private:
+    string fileName;
 public:
+
+    DataWriter() {};
+
+    DataWriter(string fileName)
+    {
+        this->fileName = fileName;
+    }
+
+    string getFileName() const
+    {
+        return this->fileName;
+    }
+
     void saveStudentData(std::vector<Student> students) override {
         ofstream myfile;
-        myfile.open("students_list.txt");
+        myfile.open(getFileName());
 
         for (std::vector<Student>::iterator it = students.begin(); it != students.end(); ++it) {
             myfile << it->getDataToWriteToFile() + "\n";
         }
 
         myfile.close();
+    }
+
+    void saveStudentData(std::vector<Student> students, string newFileName)
+    {
+        ofstream newFile(newFileName);
+
+        for (std::vector<Student>::iterator it = students.begin(); it != students.end(); ++it) {
+            newFile << it->getDataToWriteToFile() + "\n";
+        }
+
+        newFile.close();
     }
 };
 
@@ -210,11 +246,15 @@ private:
     std::vector<Student> students;
     DataFileReader dfr;
     DataWriter dw;
-
+    string fileName;
 public:
 
-    DataProcessing()
+    DataProcessing() {};
+    DataProcessing(string fileName)
     {
+        this->fileName = fileName;
+        this->dfr = DataFileReader(fileName);
+        this->dw = DataWriter(fileName);
         students = dfr.readStudentsData();
     }
 
@@ -323,22 +363,35 @@ public:
 
         return temporary_students;
     }
+
+    void savingStudentDataToFile(string fileName)
+    {
+        dw.saveStudentData(students, fileName);
+    }
 };
 
 DataProcessing dataProcess;
 
-std::vector<Student>students = dataProcess.returnStudentsList();
+std::vector<Student>students;
 
 Katalog_JIPP_Project::Katalog_JIPP_Project(QWidget *parent)
     : QMainWindow(parent)
 {
     ui.setupUi(this);
+    //to do search for .txt files in directory
+    ui.chooseFile_comboBox->addItem("students_list.txt");
+    ui.chooseFile_comboBox->addItem("students_list2.txt");
+    ui.chooseFile_comboBox->addItem("students_list3.txt");
+    ui.chooseFile_comboBox->setCurrentIndex(0);
+
+    dataProcess = DataProcessing(ui.chooseFile_comboBox->currentText().toStdString());
+    students = dataProcess.returnStudentsList();
     
     ui.comboBox_filtrowanie->addItem("Index");
     ui.comboBox_filtrowanie->addItem("Imie");
     ui.comboBox_filtrowanie->addItem("Nazwisko");
     ui.comboBox_filtrowanie->setCurrentIndex(-1);
-    this->setStyleSheet("background-image: url(app-bg.jpg)");
+    this->setStyleSheet("background-image: url(app-bg.jpg");
 
     ui.listWidget->setContextMenuPolicy(Qt::CustomContextMenu);
     connect(ui.listWidget, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(showContextMenu(QPoint)));
@@ -487,4 +540,32 @@ void Katalog_JIPP_Project::showContextMenu(const QPoint& pos)
     myMenu.addAction("Edit", this, SLOT(editStudentButton_Clicked()));
     myMenu.addAction("Remove", this, SLOT(removeStudentButton_Clicked()));
     myMenu.exec(globalPos);
+}
+
+void  Katalog_JIPP_Project::readFromFile_Clicked() {
+    dataProcess = DataProcessing(ui.chooseFile_comboBox->currentText().toStdString());
+    students = dataProcess.returnStudentsList();
+
+    ui.listWidget->clear();
+    students = dataProcess.returnStudentsList();
+
+    for (std::vector<Student>::iterator it = students.begin(); it != students.end(); ++it) {
+        ui.listWidget->addItem(QString::fromStdString(it->getInfo()));
+    }
+
+    QMessageBox::information(this, "Sukces", "Wczytano dane");
+}
+
+void Katalog_JIPP_Project::writeToFile_Clicked() {
+
+    //to do - okienko do nazwy pliku
+    if (ui.ifWriteToNewFile_checkbox->isChecked())
+    {
+        dataProcess.savingStudentDataToFile("nowy.txt");
+    }
+    else {
+        dataProcess.savingStudentDataToFile(ui.chooseFile_comboBox->currentText().toStdString());
+    }
+
+    QMessageBox::information(this, "Sukces", "Zapisano dane do pliku");
 }
