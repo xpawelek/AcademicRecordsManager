@@ -338,6 +338,7 @@ Katalog_JIPP_Project::Katalog_JIPP_Project(QWidget *parent)
     ui.comboBox_filtrowanie->addItem("Imie");
     ui.comboBox_filtrowanie->addItem("Nazwisko");
     ui.comboBox_filtrowanie->setCurrentIndex(-1);
+    this->setStyleSheet("background-image: url(app-bg.jpg)");
 
     ui.listWidget->setContextMenuPolicy(Qt::CustomContextMenu);
     connect(ui.listWidget, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(showContextMenu(QPoint)));

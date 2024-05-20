@@ -8,6 +8,7 @@ NewStudent_Form::NewStudent_Form(QWidget* parent)
 {
 	ui.setupUi(this);
 
+	this->setStyleSheet("background-image: url(app-bg.jpg)");
 	ui.comboBox_stopnie->addItem("Licencjackie");
 	ui.comboBox_stopnie->addItem("Inzynierskie");
 	ui.comboBox_stopnie->addItem("Magisterskie");
