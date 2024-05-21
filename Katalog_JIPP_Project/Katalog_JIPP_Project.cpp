@@ -2,6 +2,8 @@
 #include <fstream>
 #include <QMessageBox>
 #include <iostream>
+#include <filesystem>
+
 using namespace std;
 
 class Person {
@@ -378,10 +380,17 @@ Katalog_JIPP_Project::Katalog_JIPP_Project(QWidget *parent)
     : QMainWindow(parent)
 {
     ui.setupUi(this);
+    this->setStyleSheet("background-image: url(app-bg.jpg");
     //to do search for .txt files in directory
-    ui.chooseFile_comboBox->addItem("students_list.txt");
-    ui.chooseFile_comboBox->addItem("students_list2.txt");
-    ui.chooseFile_comboBox->addItem("students_list3.txt");
+    std::string path = ".";
+    for (const auto& entry : std::filesystem::directory_iterator(path))
+    {
+        std::string fileName = entry.path().string();
+        if (fileName.find("txt") != std::string::npos) {
+            fileName = fileName.substr(2);
+            ui.chooseFile_comboBox->addItem(QString::fromStdString(fileName));
+        }
+    }
     ui.chooseFile_comboBox->setCurrentIndex(0);
 
     dataProcess = DataProcessing(ui.chooseFile_comboBox->currentText().toStdString());
@@ -391,7 +400,7 @@ Katalog_JIPP_Project::Katalog_JIPP_Project(QWidget *parent)
     ui.comboBox_filtrowanie->addItem("Imie");
     ui.comboBox_filtrowanie->addItem("Nazwisko");
     ui.comboBox_filtrowanie->setCurrentIndex(-1);
-    this->setStyleSheet("background-image: url(app-bg.jpg");
+    ui.lineEdit_newFileName->setVisible(false);
 
     ui.listWidget->setContextMenuPolicy(Qt::CustomContextMenu);
     connect(ui.listWidget, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(showContextMenu(QPoint)));
@@ -561,11 +570,26 @@ void Katalog_JIPP_Project::writeToFile_Clicked() {
     //to do - okienko do nazwy pliku
     if (ui.ifWriteToNewFile_checkbox->isChecked())
     {
-        dataProcess.savingStudentDataToFile("nowy.txt");
+        //dodaj regexa
+        string newFileName = ui.lineEdit_newFileName->text().toStdString() + ".txt";
+        dataProcess.savingStudentDataToFile(newFileName);
+        ui.chooseFile_comboBox->addItem(QString::fromStdString(newFileName));
+        QMessageBox::information(this, "Sukces", "Zapisano dane do pliku");
     }
     else {
-        dataProcess.savingStudentDataToFile(ui.chooseFile_comboBox->currentText().toStdString());
+        auto reply = QMessageBox::question(this, "Zatwierdzenie", "Czy na pewno chcesz nadpisac istniejacy plik?", QMessageBox::Yes | QMessageBox::No);
+        if (reply == QMessageBox::Yes)
+        {
+            dataProcess.savingStudentDataToFile(ui.chooseFile_comboBox->currentText().toStdString());
+            QMessageBox::information(this, "Sukces", "Zapisano dane do pliku");
+        }       
     }
+}
 
-    QMessageBox::information(this, "Sukces", "Zapisano dane do pliku");
+void Katalog_JIPP_Project::showAreaToEnterFileName_Clicked() {
+    ui.lineEdit_newFileName->setVisible(false);
+    if (ui.ifWriteToNewFile_checkbox->isChecked())
+    {
+        ui.lineEdit_newFileName->setVisible(true);
+    }
 }

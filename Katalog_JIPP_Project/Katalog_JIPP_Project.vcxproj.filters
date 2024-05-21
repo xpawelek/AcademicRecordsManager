@@ -46,6 +46,9 @@
     <ClCompile Include="NewStudent_Form.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="ownNamespace.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="EditStudent_Form.h">
@@ -62,5 +65,10 @@
     <QtUic Include="NewStudent_Form.ui">
       <Filter>Form Files</Filter>
     </QtUic>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="ownNamespace.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

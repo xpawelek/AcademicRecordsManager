@@ -281,7 +281,7 @@
        </font>
       </property>
       <property name="styleSheet">
-       <string notr="true">padding:5; font-family: verdana; color: #353935; border: 2px solid</string>
+       <string notr="true">padding-top:10;  padding-bottom :10; color: #353935;</string>
       </property>
       <property name="text">
        <string>Dodaj!</string>

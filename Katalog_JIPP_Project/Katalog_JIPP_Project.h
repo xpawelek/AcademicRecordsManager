@@ -25,6 +25,7 @@ private slots:
     void showContextMenu(const QPoint& pos);
     void readFromFile_Clicked();
     void writeToFile_Clicked();
+    void showAreaToEnterFileName_Clicked();
 
 private:
     Ui::Katalog_JIPP_ProjectClass ui;
