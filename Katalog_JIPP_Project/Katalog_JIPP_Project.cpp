@@ -3,6 +3,8 @@
 #include <QMessageBox>
 #include <iostream>
 #include <filesystem>
+#include <regex> 
+
 
 using namespace std;
 
@@ -380,17 +382,8 @@ Katalog_JIPP_Project::Katalog_JIPP_Project(QWidget *parent)
     : QMainWindow(parent)
 {
     ui.setupUi(this);
-    this->setStyleSheet("background-image: url(app-bg.jpg");
     //to do search for .txt files in directory
-    std::string path = ".";
-    for (const auto& entry : std::filesystem::directory_iterator(path))
-    {
-        std::string fileName = entry.path().string();
-        if (fileName.find("txt") != std::string::npos) {
-            fileName = fileName.substr(2);
-            ui.chooseFile_comboBox->addItem(QString::fromStdString(fileName));
-        }
-    }
+    updateComboBox();
     ui.chooseFile_comboBox->setCurrentIndex(0);
 
     dataProcess = DataProcessing(ui.chooseFile_comboBox->currentText().toStdString());
@@ -566,15 +559,22 @@ void  Katalog_JIPP_Project::readFromFile_Clicked() {
 }
 
 void Katalog_JIPP_Project::writeToFile_Clicked() {
-
-    //to do - okienko do nazwy pliku
     if (ui.ifWriteToNewFile_checkbox->isChecked())
     {
         //dodaj regexa
         string newFileName = ui.lineEdit_newFileName->text().toStdString() + ".txt";
-        dataProcess.savingStudentDataToFile(newFileName);
-        ui.chooseFile_comboBox->addItem(QString::fromStdString(newFileName));
-        QMessageBox::information(this, "Sukces", "Zapisano dane do pliku");
+        regex fileNameRegex(R"(^[\w\s-]+\.txt$)");
+        if (std::regex_match(newFileName, fileNameRegex) == false || newFileName.length() <= 0)
+        {
+            QMessageBox::information(this, "B??d", "Nie mozna utworzyc pliku o takiej nazwie.");
+        }
+        else
+        {
+            dataProcess.savingStudentDataToFile(newFileName);
+            ui.chooseFile_comboBox->addItem(QString::fromStdString(newFileName));
+            QMessageBox::information(this, "Sukces", "Zapisano dane do pliku");
+            updateComboBox();
+        }
     }
     else {
         auto reply = QMessageBox::question(this, "Zatwierdzenie", "Czy na pewno chcesz nadpisac istniejacy plik?", QMessageBox::Yes | QMessageBox::No);
@@ -591,5 +591,28 @@ void Katalog_JIPP_Project::showAreaToEnterFileName_Clicked() {
     if (ui.ifWriteToNewFile_checkbox->isChecked())
     {
         ui.lineEdit_newFileName->setVisible(true);
+    }
+}
+
+void Katalog_JIPP_Project::updateComboBox(const std::string& path) {
+    std::vector<std::filesystem::directory_entry> entries;
+
+    for (const auto& entry : std::filesystem::directory_iterator(path)) {
+        if (entry.path().extension() == ".txt") {
+            entries.push_back(entry);
+        }
+    }
+
+    std::sort(entries.begin(), entries.end(),   
+        [](const std::filesystem::directory_entry& a, const std::filesystem::directory_entry& b) {
+            return std::filesystem::last_write_time(a) > std::filesystem::last_write_time(b);
+        }
+    );
+
+    ui.chooseFile_comboBox->clear();
+    for (const auto& entry : entries) {
+        std::string fileName = entry.path().string();
+        fileName = fileName.substr(2);
+        ui.chooseFile_comboBox->addItem(QString::fromStdString(fileName));
     }
 }

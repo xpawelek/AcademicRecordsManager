@@ -2,3 +2,4 @@
 2;Asia Hwdp;Krol ;True;Licencjackie;Niestacjonarnie;Muzyka
 3;Kasia;Sus;True;Licencjackie;Niestacjonarnie;Muzyka
 4;Wiola;Nowak;False;Licencjackie;Stacjonarnie;Muyzka
+5;Ania;Nowak;False;Licencjackie;Stacjonarnie;Lingiwstyka

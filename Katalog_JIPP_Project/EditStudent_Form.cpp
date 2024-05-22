@@ -10,7 +10,6 @@ EditStudent_Form::EditStudent_Form(int index, string passedFirstName, string pas
 
 	ui.setupUi(this);
 
-	this->setStyleSheet("background-image: url(app-bg.jpg)");
 	ui.comboBox_stopnie->addItem("Licencjackie");
 	ui.comboBox_stopnie->addItem("Inzynierskie");
 	ui.comboBox_stopnie->addItem("Magisterskie");
