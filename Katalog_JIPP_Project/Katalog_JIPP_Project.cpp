@@ -2,7 +2,20 @@
 #include <fstream>
 #include <QMessageBox>
 #include <iostream>
+#include <filesystem>
+#include <regex> 
+
+
 using namespace std;
+
+class InvalidLenght : public exception
+{
+public:
+public:
+    virtual const char* InvalidLengthError() const throw() {
+        return "Zbyt krotka dlugosc";
+    }
+};
 
 class Person {
 private:
@@ -12,6 +25,9 @@ private:
 public:
     Person(string firstName, string secondName)
     {
+        if (firstName.length() <= 2) {
+            throw InvalidLenght();
+        }
         this->firstName = firstName;
         this->secondName = secondName;
     }
@@ -26,6 +42,9 @@ public:
 
     virtual void setFirstName(const string& firstName)
     {
+        if (firstName.length() <= 2) {
+            throw InvalidLenght();
+        }
         this->firstName = firstName;
     }
 
@@ -34,6 +53,7 @@ public:
         this->secondName = secondName;
     }
 };
+
 
 class Student : public Person {
 private:
@@ -108,6 +128,7 @@ public:
     }
 
     string getInfo() {
+        string doesStudy = getIsStillStudying() ? "Studiuje" : "Nie studiuje";
         return to_string(getIndex()) + "|\tImie:\t" + getFirstName() + ",\tNazwisko:\t" + getSecondName();
     }
 
@@ -117,7 +138,6 @@ public:
     }
 };
 
-
 class IDataReader {
 public:
     virtual vector<Student> readStudentsData() = 0;
@@ -126,14 +146,24 @@ public:
 class DataFileReader : public IDataReader {
 private:
     vector<Student> students;
-
+    string fileName;
 public:
+    DataFileReader() {}
+
+    DataFileReader(string fileName) {
+        this->fileName = fileName;
+    }
+
+    string getFileName() const
+    {
+        return this->fileName;
+    }
 
     vector<Student> readStudentsData() override {
         students.clear();
         students.shrink_to_fit();
 
-        ifstream file("students_list.txt");
+        ifstream file(getFileName());
         string line;
 
         if (file.is_open()) {
@@ -156,9 +186,14 @@ public:
 
                 bool checkIfStillStudying = (studentData[3] == "True") ? true : false;
                 //Student p1(personData[0], personData[1], checkIfStillStudying, personData[3], personData[4], kierunek);
-                Student student = Student(studentData[1], studentData[2], checkIfStillStudying, studentData[4], studentData[5], field);
-                student.setIndex(stoi(studentData[0]));
-                students.push_back(student);
+                try {
+                    Student student = Student(studentData[1], studentData[2], checkIfStillStudying, studentData[4], studentData[5], field);
+                    student.setIndex(stoi(studentData[0]));
+                    students.push_back(student);
+                }
+                catch (InvalidLenght& ex) {
+                    cout << ex.InvalidLengthError() << endl;
+                }
                 // cout << line.substr(start, end) << "\n";
             }
             return students;
@@ -172,7 +207,7 @@ public:
 
     bool checkIfFileEmpty()
     {
-        ifstream file("students_list.txt");
+        ifstream file(getFileName());
         file.seekg(0, ios::end);
         if (file.tellg() == 0) {
             return true;
@@ -191,16 +226,42 @@ public:
 };
 
 class DataWriter : IDataWriter {
+private:
+    string fileName;
 public:
+
+    DataWriter() {};
+
+    DataWriter(string fileName)
+    {
+        this->fileName = fileName;
+    }
+
+    string getFileName() const
+    {
+        return this->fileName;
+    }
+
     void saveStudentData(std::vector<Student> students) override {
         ofstream myfile;
-        myfile.open("students_list.txt");
+        myfile.open(getFileName());
 
         for (std::vector<Student>::iterator it = students.begin(); it != students.end(); ++it) {
             myfile << it->getDataToWriteToFile() + "\n";
         }
 
         myfile.close();
+    }
+
+    void saveStudentData(std::vector<Student> students, string newFileName)
+    {
+        ofstream newFile(newFileName);
+
+        for (std::vector<Student>::iterator it = students.begin(); it != students.end(); ++it) {
+            newFile << it->getDataToWriteToFile() + "\n";
+        }
+
+        newFile.close();
     }
 };
 
@@ -210,11 +271,15 @@ private:
     std::vector<Student> students;
     DataFileReader dfr;
     DataWriter dw;
-
+    string fileName;
 public:
 
-    DataProcessing()
+    DataProcessing() {};
+    DataProcessing(string fileName)
     {
+        this->fileName = fileName;
+        this->dfr = DataFileReader(fileName);
+        this->dw = DataWriter(fileName);
         students = dfr.readStudentsData();
     }
 
@@ -252,10 +317,15 @@ public:
         else {
             index = students.back().getIndex() + 1;
         }
+        try {
+            Student newStudent = Student(firstName, secondName, isStillStudying, studyLevel, studyMode, fieldOfStudy);
+            newStudent.setIndex(index);
+            students.push_back(newStudent);
+        }
+        catch (InvalidLenght& ex) {
+            QMessageBox::critical(nullptr, "Error", ex.InvalidLengthError());
+        }
 
-        Student newStudent = Student(firstName, secondName, isStillStudying, studyLevel, studyMode, fieldOfStudy);
-        newStudent.setIndex(index);
-        students.push_back(newStudent);
         refreshTheList();
     };
 
@@ -323,22 +393,33 @@ public:
 
         return temporary_students;
     }
+
+    void savingStudentDataToFile(string fileName)
+    {
+        dw.saveStudentData(students, fileName);
+    }
 };
 
 DataProcessing dataProcess;
 
-std::vector<Student>students = dataProcess.returnStudentsList();
+std::vector<Student>students;
 
 Katalog_JIPP_Project::Katalog_JIPP_Project(QWidget *parent)
     : QMainWindow(parent)
 {
     ui.setupUi(this);
+    //to do search for .txt files in directory
+    updateComboBox();
+    ui.chooseFile_comboBox->setCurrentIndex(0);
+
+    dataProcess = DataProcessing(ui.chooseFile_comboBox->currentText().toStdString());
+    students = dataProcess.returnStudentsList();
     
     ui.comboBox_filtrowanie->addItem("Index");
     ui.comboBox_filtrowanie->addItem("Imie");
     ui.comboBox_filtrowanie->addItem("Nazwisko");
     ui.comboBox_filtrowanie->setCurrentIndex(-1);
-    this->setStyleSheet("background-image: url(app-bg.jpg)");
+    ui.lineEdit_newFileName->setVisible(false);
 
     ui.listWidget->setContextMenuPolicy(Qt::CustomContextMenu);
     connect(ui.listWidget, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(showContextMenu(QPoint)));
@@ -487,4 +568,77 @@ void Katalog_JIPP_Project::showContextMenu(const QPoint& pos)
     myMenu.addAction("Edit", this, SLOT(editStudentButton_Clicked()));
     myMenu.addAction("Remove", this, SLOT(removeStudentButton_Clicked()));
     myMenu.exec(globalPos);
+}
+
+void  Katalog_JIPP_Project::readFromFile_Clicked() {
+    dataProcess = DataProcessing(ui.chooseFile_comboBox->currentText().toStdString());
+    students = dataProcess.returnStudentsList();
+
+    ui.listWidget->clear();
+    students = dataProcess.returnStudentsList();
+
+    for (std::vector<Student>::iterator it = students.begin(); it != students.end(); ++it) {
+        ui.listWidget->addItem(QString::fromStdString(it->getInfo()));
+    }
+
+    QMessageBox::information(this, "Sukces", "Wczytano dane");
+}
+
+void Katalog_JIPP_Project::writeToFile_Clicked() {
+    if (ui.ifWriteToNewFile_checkbox->isChecked())
+    {
+        //dodaj regexa
+        string newFileName = ui.lineEdit_newFileName->text().toStdString() + ".txt";
+        regex fileNameRegex(R"(^[\w\s-]+\.txt$)");
+        if (std::regex_match(newFileName, fileNameRegex) == false || newFileName.length() <= 0)
+        {
+            QMessageBox::information(this, "B??d", "Nie mozna utworzyc pliku o takiej nazwie.");
+        }
+        else
+        {
+            dataProcess.savingStudentDataToFile(newFileName);
+            ui.chooseFile_comboBox->addItem(QString::fromStdString(newFileName));
+            QMessageBox::information(this, "Sukces", "Zapisano dane do pliku");
+            updateComboBox();
+        }
+    }
+    else {
+        auto reply = QMessageBox::question(this, "Zatwierdzenie", "Czy na pewno chcesz nadpisac istniejacy plik?", QMessageBox::Yes | QMessageBox::No);
+        if (reply == QMessageBox::Yes)
+        {
+            dataProcess.savingStudentDataToFile(ui.chooseFile_comboBox->currentText().toStdString());
+            QMessageBox::information(this, "Sukces", "Zapisano dane do pliku");
+        }       
+    }
+}
+
+void Katalog_JIPP_Project::showAreaToEnterFileName_Clicked() {
+    ui.lineEdit_newFileName->setVisible(false);
+    if (ui.ifWriteToNewFile_checkbox->isChecked())
+    {
+        ui.lineEdit_newFileName->setVisible(true);
+    }
+}
+
+void Katalog_JIPP_Project::updateComboBox(const std::string& path) {
+    std::vector<std::filesystem::directory_entry> entries;
+
+    for (const auto& entry : std::filesystem::directory_iterator(path)) {
+        if (entry.path().extension() == ".txt") {
+            entries.push_back(entry);
+        }
+    }
+
+    std::sort(entries.begin(), entries.end(),   
+        [](const std::filesystem::directory_entry& a, const std::filesystem::directory_entry& b) {
+            return std::filesystem::last_write_time(a) > std::filesystem::last_write_time(b);
+        }
+    );
+
+    ui.chooseFile_comboBox->clear();
+    for (const auto& entry : entries) {
+        std::string fileName = entry.path().string();
+        fileName = fileName.substr(2);
+        ui.chooseFile_comboBox->addItem(QString::fromStdString(fileName));
+    }
 }

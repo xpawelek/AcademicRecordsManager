@@ -1,0 +1,2 @@
+1;Ania;Nowak;False;Inzynierskie;Stacjonarnie;Muzyka
+2;Ania;Mol;False;Licencjackie;Stacjonarnie;Fizyka

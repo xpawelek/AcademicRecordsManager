@@ -23,6 +23,10 @@ private slots:
     void rowChanged();
     void filtering_textChanged();
     void showContextMenu(const QPoint& pos);
+    void readFromFile_Clicked();
+    void writeToFile_Clicked();
+    void showAreaToEnterFileName_Clicked();
+    void updateComboBox(const string& path = ".");
 
 private:
     Ui::Katalog_JIPP_ProjectClass ui;
