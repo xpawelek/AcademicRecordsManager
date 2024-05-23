@@ -8,6 +8,15 @@
 
 using namespace std;
 
+class InvalidLenght : public exception
+{
+public:
+public:
+    virtual const char* InvalidLengthError() const throw() {
+        return "Zbyt krotka dlugosc";
+    }
+};
+
 class Person {
 private:
     string firstName;
@@ -16,6 +25,9 @@ private:
 public:
     Person(string firstName, string secondName)
     {
+        if (firstName.length() <= 2) {
+            throw InvalidLenght();
+        }
         this->firstName = firstName;
         this->secondName = secondName;
     }
@@ -30,6 +42,9 @@ public:
 
     virtual void setFirstName(const string& firstName)
     {
+        if (firstName.length() <= 2) {
+            throw InvalidLenght();
+        }
         this->firstName = firstName;
     }
 
@@ -38,6 +53,7 @@ public:
         this->secondName = secondName;
     }
 };
+
 
 class Student : public Person {
 private:
@@ -112,6 +128,7 @@ public:
     }
 
     string getInfo() {
+        string doesStudy = getIsStillStudying() ? "Studiuje" : "Nie studiuje";
         return to_string(getIndex()) + "|\tImie:\t" + getFirstName() + ",\tNazwisko:\t" + getSecondName();
     }
 
@@ -120,7 +137,6 @@ public:
         return "Status -> " + doesStudy + "\nStopien -> " + currentStudyLevel + "\nTryb -> " + studyMode + "\nKierunek -> " + fieldOfStudy;
     }
 };
-
 
 class IDataReader {
 public:
@@ -170,9 +186,14 @@ public:
 
                 bool checkIfStillStudying = (studentData[3] == "True") ? true : false;
                 //Student p1(personData[0], personData[1], checkIfStillStudying, personData[3], personData[4], kierunek);
-                Student student = Student(studentData[1], studentData[2], checkIfStillStudying, studentData[4], studentData[5], field);
-                student.setIndex(stoi(studentData[0]));
-                students.push_back(student);
+                try {
+                    Student student = Student(studentData[1], studentData[2], checkIfStillStudying, studentData[4], studentData[5], field);
+                    student.setIndex(stoi(studentData[0]));
+                    students.push_back(student);
+                }
+                catch (InvalidLenght& ex) {
+                    cout << ex.InvalidLengthError() << endl;
+                }
                 // cout << line.substr(start, end) << "\n";
             }
             return students;
@@ -296,10 +317,15 @@ public:
         else {
             index = students.back().getIndex() + 1;
         }
+        try {
+            Student newStudent = Student(firstName, secondName, isStillStudying, studyLevel, studyMode, fieldOfStudy);
+            newStudent.setIndex(index);
+            students.push_back(newStudent);
+        }
+        catch (InvalidLenght& ex) {
+            QMessageBox::critical(nullptr, "Error", ex.InvalidLengthError());
+        }
 
-        Student newStudent = Student(firstName, secondName, isStillStudying, studyLevel, studyMode, fieldOfStudy);
-        newStudent.setIndex(index);
-        students.push_back(newStudent);
         refreshTheList();
     };
 
