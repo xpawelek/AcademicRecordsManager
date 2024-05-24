@@ -414,7 +414,7 @@ Katalog_JIPP_Project::Katalog_JIPP_Project(QWidget *parent)
 
     dataProcess = DataProcessing(ui.chooseFile_comboBox->currentText().toStdString());
     students = dataProcess.returnStudentsList();
-    
+    //
     ui.comboBox_filtrowanie->addItem("Index");
     ui.comboBox_filtrowanie->addItem("Imie");
     ui.comboBox_filtrowanie->addItem("Nazwisko");
