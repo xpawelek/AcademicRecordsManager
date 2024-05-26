@@ -200,7 +200,8 @@ public:
         }
         else
         {
-            //error opening file
+            QMessageBox::critical(nullptr, "B³¹d", "Nie mo¿na otworzyæ pliku!");
+            throw runtime_error("Nie mo¿na otworzyæ pliku!");
         }
         file.close();
     }
@@ -353,7 +354,7 @@ public:
         switch (option)
         {
         case 0:
-
+            //sprawdzamy czy indeks zawiera zadany tekst
             for (std::vector<Student>::iterator it = students.begin(); it != students.end(); ++it) {
                 string index = std::to_string(it->getIndex());
                 std::transform(index.begin(), index.end(), index.begin(), ::tolower);
@@ -366,6 +367,7 @@ public:
             break;
 
         case 1:
+            //sprawdzamy czy imie zaiwera zadany tekst
             for (std::vector<Student>::iterator it = students.begin(); it != students.end(); ++it) {
                 string firstName = it->getFirstName();
                 std::transform(firstName.begin(), firstName.end(), firstName.begin(), ::tolower);
@@ -379,6 +381,7 @@ public:
             break;
 
         case 2:
+            //sprawdzamy czy nazwisko zawiera zadany tekst
             for (std::vector<Student>::iterator it = students.begin(); it != students.end(); ++it) {
                 string secondName = it->getSecondName();
                 std::transform(secondName.begin(), secondName.end(), secondName.begin(), ::tolower);
@@ -414,7 +417,6 @@ Katalog_JIPP_Project::Katalog_JIPP_Project(QWidget *parent)
 
     dataProcess = DataProcessing(ui.chooseFile_comboBox->currentText().toStdString());
     students = dataProcess.returnStudentsList();
-    //
     ui.comboBox_filtrowanie->addItem("Index");
     ui.comboBox_filtrowanie->addItem("Imie");
     ui.comboBox_filtrowanie->addItem("Nazwisko");
