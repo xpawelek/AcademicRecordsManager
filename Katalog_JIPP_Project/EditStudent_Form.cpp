@@ -46,27 +46,27 @@ void EditStudent_Form::editButton_Clicked() {
 	regex myStringsRegex("[a-zA-Z ]+");
 	if (std::regex_match(firstName, myStringsRegex) == false || firstName.length() < 3)
 	{
-		errors.push_back("Niepoprawny dane zawarte w imieniu.");
+		errors.push_back("First name contains invalid data.");
 	}
 
 	if (std::regex_match(secondName, myStringsRegex) == false || firstName.length() < 3)
 	{
-		errors.push_back("Niepoprawny dane zawarte w nazwisku.");
+		errors.push_back("Second name contains invalid data.");
 	}
 
 	if (std::regex_match(fieldOfStudy, myStringsRegex) == false)
 	{
-		errors.push_back("Niepoprawny dane zawarte w kierunku.");
+		errors.push_back("Field of study contains invalid data.");
 	}
 
 
 	if (ui.comboBox_stopnie->currentIndex() == -1)
 	{
-		errors.push_back("Nie wybrano kierunku studiow.");
+		errors.push_back("Study level has not been chosen.");
 	}
 
 	if (ui.rd_niestacjonarnie->isChecked() == false && ui.rd_stacjonarnie->isChecked() == false) {
-		errors.push_back("Niepoprawny zaznaczono tryby studiowania.");
+		errors.push_back("Study mode has not been checked.");
 	}
 
 	if (errors.size() == 0)
@@ -74,7 +74,7 @@ void EditStudent_Form::editButton_Clicked() {
 		string studyMode = ui.rd_stacjonarnie->isChecked() ? "Stacjonarnie" : "Niestacjonarnie";
 		bool isStillStudying = ui.checkBox_IfStillStudy->isChecked() ? true : false;
 		emit sendEditedDataBack(passedIndex, firstName, secondName, isStillStudying, ui.comboBox_stopnie->currentText().toStdString(), studyMode, fieldOfStudy);
-		QMessageBox::information(this, "Sukces", "Dane studenta zostaly zedytowane.");
+		QMessageBox::information(this, "Sucess", "Student data has been edited.");
 		this->close();
 	}
 	else {
@@ -83,6 +83,6 @@ void EditStudent_Form::editButton_Clicked() {
 			errorMessage += *it + " \n";
 		}
 
-		QMessageBox::information(this, "Popraw wprowadzone dane.", QString::fromStdString(errorMessage));
+		QMessageBox::information(this, "Correct invalid data.", QString::fromStdString(errorMessage));
 	}
 }

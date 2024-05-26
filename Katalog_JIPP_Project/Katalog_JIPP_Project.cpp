@@ -28,6 +28,7 @@ public:
         if (firstName.length() <= 2) {
             throw InvalidLenght();
         }
+        
         this->firstName = firstName;
         this->secondName = secondName;
     }
@@ -75,7 +76,7 @@ public:
 
     void setIndex(const int& index) {
         this->index = index;
-    }//xx
+    }
 
     int getIndex() const {
         return index;
@@ -175,17 +176,14 @@ public:
                 auto end = line.find(delimeter);
                 while (end != std::string::npos)
                 {
-                    //czytaj dane z pliku -> stworz obiekt osoby i do konstrukota dodaj dane z pliku -> dodaj do listy
                     string cell = line.substr(start, end - start);
                     studentData.push_back(cell);
                     start = end + delimeter.length();
                     end = line.find(delimeter, start);
-                    // cout << cell << 'n';
                 }
                 string field = line.substr(start, end);
 
                 bool checkIfStillStudying = (studentData[3] == "True") ? true : false;
-                //Student p1(personData[0], personData[1], checkIfStillStudying, personData[3], personData[4], kierunek);
                 try {
                     Student student = Student(studentData[1], studentData[2], checkIfStillStudying, studentData[4], studentData[5], field);
                     student.setIndex(stoi(studentData[0]));
@@ -194,7 +192,6 @@ public:
                 catch (InvalidLenght& ex) {
                     cout << ex.InvalidLengthError() << endl;
                 }
-                // cout << line.substr(start, end) << "\n";
             }
             return students;
         }
@@ -411,7 +408,6 @@ Katalog_JIPP_Project::Katalog_JIPP_Project(QWidget *parent)
     : QMainWindow(parent)
 {
     ui.setupUi(this);
-    //to do search for .txt files in directory
     updateComboBox();
     ui.chooseFile_comboBox->setCurrentIndex(0);
 
@@ -475,7 +471,7 @@ void Katalog_JIPP_Project::editStudentButton_Clicked() {
         }
     }
     else {
-        QMessageBox::information(this, "Nie wybrano studenta", "Wybierz studenta!");
+        QMessageBox::information(this, "Error", "Choose a student!");
     }
 }
 
@@ -494,7 +490,7 @@ void Katalog_JIPP_Project::editingStudent(const int& indexReceived, const string
 
 void Katalog_JIPP_Project::removeStudentButton_Clicked() {
     if (selectedItem != -1) {
-        auto reply = QMessageBox::question(this, "Zatwierdzenie", "Czy na pewno chcesz usunac studenta z listy?", QMessageBox::Yes | QMessageBox::No);
+        auto reply = QMessageBox::question(this, "Confirmation", "Are you sure that you want delete that student?", QMessageBox::Yes | QMessageBox::No);
         if (reply == QMessageBox::Yes)
         {
             QListWidgetItem* item = ui.listWidget->currentItem();
@@ -508,7 +504,7 @@ void Katalog_JIPP_Project::removeStudentButton_Clicked() {
             for (std::vector<Student>::iterator it = students.begin(); it != students.end(); ++it) {
                 ui.listWidget->addItem(QString::fromStdString(it->getInfo()));
             }
-            QMessageBox::information(this, "", "Usunieto pomyslnie.");
+            QMessageBox::information(this, "", "Student has been deleted.");
         }
         ui.listWidget->setCurrentRow(-1);
         selectedItem = ui.listWidget->currentRow();
@@ -516,7 +512,7 @@ void Katalog_JIPP_Project::removeStudentButton_Clicked() {
     }
     else
     {
-        QMessageBox::information(this, "Nie wybrano studenta", "Wybierz studenta!");
+        QMessageBox::information(this, "Error", "Choose a student!");
     }
 }
 
@@ -530,7 +526,7 @@ void Katalog_JIPP_Project::chosenStudentDoubleClicked() {
         if (it->getIndex() == pieces[0].toInt())
         {
             QString additionalInfo = QString::fromStdString(it->getAdditionalInfo());
-            QMessageBox::information(this, "Dodatkowe informacje", additionalInfo);
+            QMessageBox::information(this, "Additional Information", additionalInfo);
         }
     }
 }
@@ -583,33 +579,32 @@ void  Katalog_JIPP_Project::readFromFile_Clicked() {
         ui.listWidget->addItem(QString::fromStdString(it->getInfo()));
     }
 
-    QMessageBox::information(this, "Sukces", "Wczytano dane");
+    QMessageBox::information(this, "Success", "Data has been read.");
 }
 
 void Katalog_JIPP_Project::writeToFile_Clicked() {
     if (ui.ifWriteToNewFile_checkbox->isChecked())
     {
-        //dodaj regexa
         string newFileName = ui.lineEdit_newFileName->text().toStdString() + ".txt";
         regex fileNameRegex(R"(^[\w\s-]+\.txt$)");
         if (std::regex_match(newFileName, fileNameRegex) == false || newFileName.length() <= 0)
         {
-            QMessageBox::information(this, "B??d", "Nie mozna utworzyc pliku o takiej nazwie.");
+            QMessageBox::information(this, "Error", "You are not able to create file with such name.");
         }
         else
         {
             dataProcess.savingStudentDataToFile(newFileName);
             ui.chooseFile_comboBox->addItem(QString::fromStdString(newFileName));
-            QMessageBox::information(this, "Sukces", "Zapisano dane do pliku");
+            QMessageBox::information(this, "Success", "Data has been writen to new file.");
             updateComboBox();
         }
     }
     else {
-        auto reply = QMessageBox::question(this, "Zatwierdzenie", "Czy na pewno chcesz nadpisac istniejacy plik?", QMessageBox::Yes | QMessageBox::No);
+        auto reply = QMessageBox::question(this, "Confirmation", "Are you sure that you want to override exisiting file?", QMessageBox::Yes | QMessageBox::No);
         if (reply == QMessageBox::Yes)
         {
             dataProcess.savingStudentDataToFile(ui.chooseFile_comboBox->currentText().toStdString());
-            QMessageBox::information(this, "Sukces", "Zapisano dane do pliku");
+            QMessageBox::information(this, "Success", "Data has been writen to new file.");
         }       
     }
 }
