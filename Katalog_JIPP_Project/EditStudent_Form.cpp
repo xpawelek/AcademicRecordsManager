@@ -46,27 +46,27 @@ void EditStudent_Form::editButton_Clicked() {
 	regex myStringsRegex("[a-zA-Z ]+");
 	if (std::regex_match(firstName, myStringsRegex) == false || firstName.length() < 3)
 	{
-		errors.push_back("First name contains invalid data.");
+		errors.push_back("Imie zawiera niepoprawne dane.");
 	}
 
 	if (std::regex_match(secondName, myStringsRegex) == false || firstName.length() < 3)
 	{
-		errors.push_back("Second name contains invalid data.");
+		errors.push_back("Nazwisko zawiera niepoprawne dane.");
 	}
 
 	if (std::regex_match(fieldOfStudy, myStringsRegex) == false)
 	{
-		errors.push_back("Field of study contains invalid data.");
+		errors.push_back("Kierunek studi\u00F3w zawiera niepoprawne dane.");
 	}
 
 
 	if (ui.comboBox_stopnie->currentIndex() == -1)
 	{
-		errors.push_back("Study level has not been chosen.");
+		errors.push_back("Stopie\u0144 studi\u00F3w nie zosta\u0142 wybrany.");
 	}
 
 	if (ui.rd_niestacjonarnie->isChecked() == false && ui.rd_stacjonarnie->isChecked() == false) {
-		errors.push_back("Study mode has not been checked.");
+		errors.push_back("Nie wybrano trybu studiowania.");
 	}
 
 	if (errors.size() == 0)
@@ -74,7 +74,7 @@ void EditStudent_Form::editButton_Clicked() {
 		string studyMode = ui.rd_stacjonarnie->isChecked() ? "Stacjonarnie" : "Niestacjonarnie";
 		bool isStillStudying = ui.checkBox_IfStillStudy->isChecked() ? true : false;
 		emit sendEditedDataBack(passedIndex, firstName, secondName, isStillStudying, ui.comboBox_stopnie->currentText().toStdString(), studyMode, fieldOfStudy);
-		QMessageBox::information(this, "Sucess", "Student data has been edited.");
+		QMessageBox::information(this, "Sukces", "Dane zosta\u0142y zedytowane.");
 		this->close();
 	}
 	else {
@@ -83,6 +83,6 @@ void EditStudent_Form::editButton_Clicked() {
 			errorMessage += *it + " \n";
 		}
 
-		QMessageBox::information(this, "Correct invalid data.", QString::fromStdString(errorMessage));
+		QMessageBox::information(this, "Popraw wprowadzone dane.", QString::fromStdString(errorMessage));
 	}
 }

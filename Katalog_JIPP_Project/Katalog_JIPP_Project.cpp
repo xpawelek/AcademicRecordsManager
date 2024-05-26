@@ -197,8 +197,8 @@ public:
         }
         else
         {
-            QMessageBox::critical(nullptr, "B³¹d", "Nie mo¿na otworzyæ pliku!");
-            throw runtime_error("Nie mo¿na otworzyæ pliku!");
+            QMessageBox::critical(nullptr, "B\u0142\u0105d", "Nie mo\u017Cna otworzy\u0107 pliku!");
+            throw runtime_error("Nie mo\u017Cna otworzy\u0107 pliku!");
         }
         file.close();
     }
@@ -321,7 +321,7 @@ public:
             students.push_back(newStudent);
         }
         catch (InvalidLenght& ex) {
-            QMessageBox::critical(nullptr, "Error", ex.InvalidLengthError());
+            QMessageBox::critical(nullptr, "B\u0142\u0105d", ex.InvalidLengthError());
         }
 
         refreshTheList();
@@ -471,7 +471,7 @@ void Katalog_JIPP_Project::editStudentButton_Clicked() {
         }
     }
     else {
-        QMessageBox::information(this, "Error", "Choose a student!");
+        QMessageBox::information(this, "B\u0142\u0105d", "Wybierz studenta!");
     }
 }
 
@@ -490,7 +490,7 @@ void Katalog_JIPP_Project::editingStudent(const int& indexReceived, const string
 
 void Katalog_JIPP_Project::removeStudentButton_Clicked() {
     if (selectedItem != -1) {
-        auto reply = QMessageBox::question(this, "Confirmation", "Are you sure that you want delete that student?", QMessageBox::Yes | QMessageBox::No);
+        auto reply = QMessageBox::question(this, "Potwierdzenie", "Czy jeste\u015B pewnien, \u017Ce chcesz usun\u0105\u0107 studenta?", QMessageBox::Yes | QMessageBox::No);
         if (reply == QMessageBox::Yes)
         {
             QListWidgetItem* item = ui.listWidget->currentItem();
@@ -504,7 +504,7 @@ void Katalog_JIPP_Project::removeStudentButton_Clicked() {
             for (std::vector<Student>::iterator it = students.begin(); it != students.end(); ++it) {
                 ui.listWidget->addItem(QString::fromStdString(it->getInfo()));
             }
-            QMessageBox::information(this, "", "Student has been deleted.");
+            QMessageBox::information(this, "", "Student zosta\u0142 usuni\u0119ty.");
         }
         ui.listWidget->setCurrentRow(-1);
         selectedItem = ui.listWidget->currentRow();
@@ -512,7 +512,7 @@ void Katalog_JIPP_Project::removeStudentButton_Clicked() {
     }
     else
     {
-        QMessageBox::information(this, "Error", "Choose a student!");
+        QMessageBox::information(this, "B\u0142\u0105d", "Wybierz studenta!");
     }
 }
 
@@ -526,7 +526,7 @@ void Katalog_JIPP_Project::chosenStudentDoubleClicked() {
         if (it->getIndex() == pieces[0].toInt())
         {
             QString additionalInfo = QString::fromStdString(it->getAdditionalInfo());
-            QMessageBox::information(this, "Additional Information", additionalInfo);
+            QMessageBox::information(this, "Dodatkowe inforamcje", additionalInfo);
         }
     }
 }
@@ -562,9 +562,9 @@ void Katalog_JIPP_Project::showContextMenu(const QPoint& pos)
 {
     QPoint globalPos = ui.listWidget->mapToGlobal(pos);
     QMenu myMenu;
-    myMenu.addAction("View more details", this, SLOT(chosenStudentDoubleClicked()));
-    myMenu.addAction("Edit", this, SLOT(editStudentButton_Clicked()));
-    myMenu.addAction("Remove", this, SLOT(removeStudentButton_Clicked()));
+    myMenu.addAction("Wy\u015Bwietl wi\u0119cej informacji", this, SLOT(chosenStudentDoubleClicked()));
+    myMenu.addAction("Edytuj", this, SLOT(editStudentButton_Clicked()));
+    myMenu.addAction("Usu\u0144", this, SLOT(removeStudentButton_Clicked()));
     myMenu.exec(globalPos);
 }
 
@@ -579,7 +579,7 @@ void  Katalog_JIPP_Project::readFromFile_Clicked() {
         ui.listWidget->addItem(QString::fromStdString(it->getInfo()));
     }
 
-    QMessageBox::information(this, "Success", "Data has been read.");
+    QMessageBox::information(this, "Sukces", "Dane zosta\u0142y wczytane.");
 }
 
 void Katalog_JIPP_Project::writeToFile_Clicked() {
@@ -589,22 +589,22 @@ void Katalog_JIPP_Project::writeToFile_Clicked() {
         regex fileNameRegex(R"(^[\w\s-]+\.txt$)");
         if (std::regex_match(newFileName, fileNameRegex) == false || newFileName.length() <= 0)
         {
-            QMessageBox::information(this, "Error", "You are not able to create file with such name.");
+            QMessageBox::information(this, "B\u0142\u0105d", "Nie mo\u017Cna utworzy\u0107 pliku o takiej nazwie.");
         }
         else
         {
             dataProcess.savingStudentDataToFile(newFileName);
             ui.chooseFile_comboBox->addItem(QString::fromStdString(newFileName));
-            QMessageBox::information(this, "Success", "Data has been writen to new file.");
+            QMessageBox::information(this, "Sukces", "Dane zosta\u0142y zapisane do pliku.");
             updateComboBox();
         }
     }
     else {
-        auto reply = QMessageBox::question(this, "Confirmation", "Are you sure that you want to override exisiting file?", QMessageBox::Yes | QMessageBox::No);
+        auto reply = QMessageBox::question(this, "Potwierdzenie", "Czy jeste\u015B pewnien, \u017Ce chcesz nadpisa\u0107 istniej\u0105cy plik?", QMessageBox::Yes | QMessageBox::No);
         if (reply == QMessageBox::Yes)
         {
             dataProcess.savingStudentDataToFile(ui.chooseFile_comboBox->currentText().toStdString());
-            QMessageBox::information(this, "Success", "Data has been writen to new file.");
+            QMessageBox::information(this, "Sukces", "Dane zosta\u0142y zapisane do pliku.");
         }       
     }
 }
