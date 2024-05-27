@@ -1,5 +1,0 @@
-1;Ola;Firlej;True;Licencjackie;Stacjonarnie;Muzyka
-2;Asia;Krol;True;Licencjackie;Niestacjonarnie;Muzyka
-3;Kasia;Sus;True;Licencjackie;Niestacjonarnie;Muzyka
-4;Wiola;Nowak;False;Licencjackie;Stacjonarnie;Muzyka
-5;Ania;Nowak;False;Licencjackie;Stacjonarnie;Lingwistyka
